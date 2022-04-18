@@ -57,13 +57,18 @@ context('Cypress Mailmunch - User Journey Tests', () => {
 
     addListOrTag({
       type: 'list',
-      itemName: 'General' || 'abc',
+      itemName: 'General',
+      sendAutoResponders: true
+    })
+    addListOrTag({
+      type: 'list',
+      itemName: 'abc',
       sendAutoResponders: true
     })
 
     addListOrTag({
       type: 'tag',
-      itemName: 'qwer' || '',
+      itemName: 'qwer',
     })
 
     cy.get('[data-attribute="button-subscriber-upsert-save"]').click()
@@ -86,23 +91,39 @@ context('Cypress Mailmunch - User Journey Tests', () => {
      })
     addCustomField({ 
       fieldName: 'Website',
-      fieldValue: 'https://mailmunch.com'
+      fieldValue: 'mailmunch.com'
      })
+     
     addCustomField({ 
       fieldName: 'Zip Code',
-      fieldValue: '54000'
+      fieldValue: 'abcd'
      })
+     
     addCustomField({ 
       fieldName: 'Phone Number',
-      fieldValue: '03001234567'
+      fieldValue: '+1-234-567-8901'
      })
+     
     addCustomField({ 
       fieldName: 'Name',
       fieldValue: 'John Doe'
      })
 
     cy.get('[data-attribute="button-subscriber-upsert-save"]').click()
+    
+    cy.contains('Invalid website url')
+    cy.get('[data-attribute="input-subscriber-upsert-website"]').click().clear({ force: true }).type('https://mailmunch.com')
+    
+    cy.contains('Invalid zip code')
+    cy.get('[data-attribute="input-subscriber-upsert-zip_code"]').click().clear({ force: true }).type('12345')
+    
+    cy.contains('Invalid phone number')
+    cy.get('[data-attribute="input-subscriber-upsert-phone_number"]').click().clear({ force: true }).type('03001234567')
+    
+    cy.get('[data-attribute="button-subscriber-upsert-save"]').click()
+
   })
+  
   it('User Journey Page - Contains (Custom Field)', () => {
     cy.get('body').contains('Weight')
     cy.get('body').contains('Age')
